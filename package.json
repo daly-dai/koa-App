@@ -1,0 +1,17 @@
+{
+  "name": "koa-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "serve": "nodemon app.js"
+  },
+  "author": "dsh",
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^2.13.1",
+    "koa-router": "^10.0.0",
+    "mongoose": "^5.11.11"
+  }
+}
