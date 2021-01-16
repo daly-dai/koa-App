@@ -5,12 +5,13 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "serve": "nodemon app.js"
+    "dev": "nodemon app.js"
   },
   "author": "dsh",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "gravatar": "^1.8.1",
     "koa": "^2.13.1",
     "koa-bodyparser": "^4.3.0",
     "koa-router": "^10.0.0",

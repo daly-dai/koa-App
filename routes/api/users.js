@@ -1,6 +1,7 @@
 const Router = require("koa-router");
 const router = new Router();
 const bcrypt = require('bcryptjs');
+const gravatar = require('gravatar');
 
 // 引入user
 const User = require('../../models/User')
@@ -21,40 +22,75 @@ router.get("/test", async (ctx) => {
  * @access 公开的接口
  */
 router.post("/registrer", async (ctx) => {
+  const data = ctx.request;
 
   // 存储到数据库
-  const findResult = await User.find({ email: ctx.request.body.email });
+  const findResult = await User.find({ email: data.body.email });
 
   if (findResult.length > 0) {
-    ctx.status = 500;
-    ctx.body = { 'email': '邮箱已被占用' }
-  } else {
-    const newUser = new User({
-      name: ctx.request.body.name,
-      email: ctx.request.body.email,
-      password: ctx.request.body.password
-    });
+    ctx.status = 404;
+    ctx.body = { 'email': '邮箱已被占用' };
 
-    await new Promise(resolve => {
-      bcrypt.genSalt(10, (err, salt) => {
-        bcrypt.hash(newUser.password, salt, (err, hash) => {
-          if (err) reject(err);
-
-          newUser.password = hash;
-          console.log(hash);
-          resolve();
-        });
-      })
-    });
-
-    // 存儲到存储到数据库
-    await newUser.save().then(user => {
-      ctx.body = user
-    }).catch(err => {
-      console.log(err);
-    })
+    ctx.throw(500, '邮箱已被占用');
   }
+
+  console.log(12365465);
+  // 获取全球邮箱的头像
+  const avatar = gravatar.url(data.body.email, { s: '200', r: 'pg', d: 'mm' });
+  const newUser = new User({
+    name: ctx.request.body.name,
+    email: ctx.request.body.email,
+    avatar,
+    password: ctx.request.body.password
+  });
+
+
+  // 密码加密
+  await new Promise(resolve => {
+    bcrypt.genSalt(10, (err, salt) => {
+      bcrypt.hash(newUser.password, salt, (err, hash) => {
+        if (err) reject(err);
+
+        newUser.password = hash;
+        resolve();
+      });
+    })
+  });
+
+  // 存儲到存储到数据库
+  await newUser.save().then(user => {
+    ctx.body = user
+  }).catch(err => {
+    console.log(err);
+  })
+
 });
+
+
+/**
+ * @route post api/users/login
+ * @description 登录接口 返回token
+ * @public 公开的接口
+ */
+router.post("/login", async (ctx) => {
+  const data = ctx.request.body;
+  //  查询登录的邮箱是否存在
+  const findResult = await User.find({ email: data.email });
+  if (!findResult.length) {
+    ctx.status = 404;
+    ctx.body = { email: '用户不存在' }
+  }
+
+  // 验证密码
+  let result = await bcrypt.compareSync(data.password, findResult[0].password);
+
+  // 验证通过
+
+  if (!result) {
+    ctx.status = 404;
+    ctx.body = { email: '用户名或者密码错误' }
+  }
+})
 
 
 module.exports = router.routes();
