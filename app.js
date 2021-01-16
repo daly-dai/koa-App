@@ -8,6 +8,7 @@ const passport = require("koa-passport");
 const app = new koa();
 
 app.use(bodyParser());
+
 // config
 const dbURL = require("./config/keys").mongoURI;
 // 链接数据库

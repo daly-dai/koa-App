@@ -8,6 +8,10 @@ const passport = require("koa-passport");
 
 // 引入user
 const User = require("../../models/User");
+
+// 引入验证
+const validateRegisterInput = require("../../validation/registrer");
+
 /**
  * @route GET api/users/text
  * @description 测试接口地址
@@ -19,12 +23,21 @@ router.get("/test", async (ctx) => {
 });
 
 /**
- * @route POST api/users/registrer
+ * @route POST api/users/register
  * @description 注册接口地址
  * @access 公开的接口
  */
-router.post("/registrer", async (ctx) => {
+router.post("/register", async (ctx) => {
   const data = ctx.request;
+
+  const { errors, isValid } = validateRegisterInput(data.body);
+
+  if (!isValid) {
+    ctx.status = 404;
+    ctx.body = errors;
+
+    res.send(500, errors);
+  }
 
   // 存储到数据库
   const findResult = await User.find({ email: data.body.email });
