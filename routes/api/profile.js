@@ -5,6 +5,8 @@ const passport = require("koa-passport");
 // 引入模板实例
 const Profile = require("../../models/profile.js");
 
+const validateProfileInput = require("../../validation/profile.js");
+
 /**
  * @route GET api/profile/test
  * @description 测试接口地址
@@ -46,11 +48,18 @@ router.get(
  * @access 私密的
  */
 router.post(
-  "/addAndupdate",
+  "/addAndUpdate",
   passport.authenticate("jwt", { session: false }),
   async (ctx) => {
     const profileFields = { social: {} };
     const data = ctx.request.body;
+    const { error, isValid } = validateProfileInput(data);
+
+    if (!isValid) {
+      ctx.status = 404;
+      ctx.body = error;
+      ctx.throw(404, error);
+    }
 
     profileFields.user = ctx.state.user.id;
 
@@ -129,5 +138,53 @@ router.post(
     }
   }
 );
+
+/**
+ * @route GET api/profile/handle?handle = test
+ * @description 根据handle获取用户信息
+ * @access 公开的接口
+ */
+router.get("/handle", async (ctx) => {
+  const handle = ctx.query.handle;
+
+  const profile = await Profile.find({ handle: handle }).populate("user", [
+    "name",
+    "avatar",
+  ]);
+
+  if (profile.length === 0) {
+    ctx.status = 404;
+    ctx.body = "没有该用户信息";
+
+    ctx.throw(404, ctx.body);
+  }
+
+  ctx.status = 200;
+  ctx.body = profile[0];
+});
+
+/**
+ * @route GET api/profile/handle?user_id =
+ * @description 根据handle获取用户信息
+ * @access 公开的接口
+ */
+router.get("/user", async (ctx) => {
+  const user_id = ctx.query.user_id;
+
+  const profile = await Profile.find({ user: user_id }).populate("user", [
+    "name",
+    "avatar",
+  ]);
+
+  if (profile.length === 0) {
+    ctx.status = 404;
+    ctx.body = "没有该用户信息";
+
+    ctx.throw(404, ctx.body);
+  }
+
+  ctx.status = 200;
+  ctx.body = profile[0];
+});
 
 module.exports = router.routes();
