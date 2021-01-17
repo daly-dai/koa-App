@@ -11,6 +11,7 @@ const User = require("../../models/User");
 
 // 引入验证
 const validateRegisterInput = require("../../validation/registrer");
+const validateLoginInput = require("../../validation/login.js");
 
 /**
  * @route GET api/users/text
@@ -30,16 +31,15 @@ router.get("/test", async (ctx) => {
 router.post("/register", async (ctx) => {
   const data = ctx.request;
 
-  const { errors, isValid } = validateRegisterInput(data.body);
+  const { error, isValid } = validateRegisterInput(data.body);
 
   if (!isValid) {
     ctx.status = 404;
-    ctx.body = errors;
-
-    res.send(500, errors);
+    ctx.body = error;
+    ctx.throw(404, error);
   }
 
-  // 存储到数据库
+  // 数据库查询
   const findResult = await User.find({ email: data.body.email });
 
   if (findResult.length > 0) {
@@ -88,6 +88,15 @@ router.post("/register", async (ctx) => {
  */
 router.post("/login", async (ctx) => {
   const data = ctx.request.body;
+  const { error, isValid } = validateLoginInput(data);
+
+  if (!isValid) {
+    ctx.status = 404;
+    ctx.body = error;
+
+    ctx.throw(404, error);
+  }
+
   //  查询登录的邮箱是否存在
   const findResult = await User.find({ email: data.email });
 
@@ -105,7 +114,6 @@ router.post("/login", async (ctx) => {
   if (!result) {
     ctx.status = 400;
     ctx.body = { email: "用户名或者密码错误" };
-
     ctx.throw(404, "用户名或者密码错误");
   }
 

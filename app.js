@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("koa-bodyparser"); // 获取前端传输过来的数据
 const router = require("./routes/api/index.js");
 const passport = require("koa-passport");
+const errorHandler = require("./middleware/errorHandler");
 
 // 实例化koa
 const app = new koa();
@@ -20,6 +21,11 @@ mongoose
   .catch((err) => {
     console.log(err);
   });
+
+  mongoose.set('useFindAndModify', false)
+
+// 统一的错误处理
+errorHandler(app);
 
 app.use(passport.initialize());
 app.use(passport.session());
