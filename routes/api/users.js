@@ -30,7 +30,6 @@ router.get("/test", async (ctx) => {
  */
 router.post("/register", async (ctx) => {
   const data = ctx.request;
-
   const { error, isValid } = validateRegisterInput(data.body);
 
   if (!isValid) {
@@ -122,10 +121,16 @@ router.post("/login", async (ctx) => {
     name: findResult[0].name,
     avatar: findResult[0].avatar,
   };
-  const token = jwt.sign(payload, keys.secretOrKey, { expiresIn: 3600 * 6 });
+  const token = jwt.sign(payload, keys.secretOrKey, { expiresIn: 3600 * 2 });
+  const refToken = jwt.sign(payload, keys.secretOrKey, { expiresIn: 3600 * 6 });
 
   ctx.status = 200;
-  ctx.body = { success: true, token: "Bearer " + token };
+  const resData = {
+    token: "Bearer " + token,
+    refToken: "Bearer " + refToken
+  }
+
+  ctx.body = { success: true, mesg: "处理成功", code: '000000', data: resData };
 });
 
 /**

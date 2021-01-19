@@ -17,6 +17,7 @@ module.exports = (app) => {
         case 500:
           fileName = status;
           break;
+
         default:
           fileName = "other";
           break;
