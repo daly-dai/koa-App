@@ -130,7 +130,7 @@ router.post("/login", async (ctx) => {
     refToken: "Bearer " + refToken
   }
 
-  ctx.body = { success: true, mesg: "处理成功", code: '000000', data: resData };
+  ctx.body = { success: true, mesg: "处理成功", code: '0000', data: resData };
 });
 
 /**
