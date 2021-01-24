@@ -5,6 +5,7 @@ const bodyParser = require("koa-bodyparser"); // 获取前端传输过来的数�
 const router = require("./routes/api/index.js");
 const passport = require("koa-passport");
 const errorHandler = require("./middleware/errorHandler");
+const routerResponse = require("./middleware/routerResponse.js");
 
 // 实例化koa
 const app = new koa();
@@ -28,8 +29,13 @@ mongoose
 
 mongoose.set('useFindAndModify', false)
 
+
 // 统一的错误处理
 errorHandler(app);
+
+// 同意的返回数据封装
+
+app.use(routerResponse());
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -40,6 +46,7 @@ require("./config/passport")(passport);
 // 配置路由
 app.use(router.routes()).use(router.allowedMethods());
 
+// 配置跨域
 app.use(async (ctx, next) => {
   ctx.set("Access-Control-Allow-Origin", "*")
   ctx.set("Access-Control-Allow-Headers", "authorization")
