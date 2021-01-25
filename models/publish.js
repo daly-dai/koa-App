@@ -51,7 +51,7 @@ const PublishSchema = new Schema({
         // 运费计算方式
         type: Number,
         required: true
-    },
+    }
 });
 
 module.exports = Publish = mongoose.model("publish", PublishSchema);

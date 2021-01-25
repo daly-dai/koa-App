@@ -6,6 +6,9 @@ const passport = require("koa-passport");
 // 引入模板实例
 const Publish = require("../../models/publish.js");
 
+// 引入模板实例
+const Reply = require("../../models/reply.js");
+
 
 const validatePublishInput = require("../../validation/publish.js");
 
@@ -79,7 +82,7 @@ router.get('/getPublish',
 
 
 /**
- * @route GET api/publish/getPublishByID
+ * @route GET api/publish/getPublishById
  * @description 获取发布商品的详细信息
  * @access 私密的数据
  */
@@ -101,7 +104,7 @@ router.get('/getPublishById',
 );
 
 /**
- * @route GET api/publish/getPublish
+ * @route GET api/publish/updatePublish
  * @description 更新订单信息(局部更新)
  * @access 私密的数据
  */
@@ -133,18 +136,51 @@ router.post("/updatePublish",
             }
         }
 
-        const list = await Publish.updateOne(
-            { id },
-            { $set: publishFields }
-        );
+        const updatePublish = await Publish.findByIdAndUpdate(
+            { _id: id },
+            publishFields,
+            { upsert: true, new: true })
 
-        console.log(Publish, 89898989);
-        debugger
-        console.log(list, 77777);
+
+        if (!updatePublish) {
+            ctx.status = 500;
+            ctx.throw(500, "更新失败")
+        }
 
         ctx.status = 200;
         ctx.success("更新成功")
+
+
     }
 );
+
+/**
+ * @route GET api/publish/updatePublishStatus
+ * @description 更新订单状态信息(局部更新)
+ * @access 私密的数据
+ */
+router.post('/updatePublishStatus',
+    passport.authenticate("jwt", { session: false })
+    , async (ctx) => {
+        const userId = ctx.state.user.id;
+        const id = ctx.body.id;
+
+    }
+);
+
+/**
+ * @route GET api/publish/addPublishReply
+ * @description 添加订单回复
+ * @access 私密的数据
+ */
+router.post("/addPublishReply",
+    passport.authenticate("jwt", { session: false }),
+    async (ctx) => {
+        const userId = ctx.state.user.id;
+        const id = ctx.body.id;
+    })
+
+
+
 
 module.exports = router.routes();

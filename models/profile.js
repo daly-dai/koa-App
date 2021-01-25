@@ -94,20 +94,6 @@ const ProfileSchema = new Schema({
       },
     },
   ],
-  social: {
-    wechat: {
-      type: String,
-    },
-    QQ: {
-      type: String,
-    },
-    tengxunkt: {
-      type: String,
-    },
-    wangyikt: {
-      type: String,
-    },
-  },
   date: {
     type: Date,
     default: Date.now,
