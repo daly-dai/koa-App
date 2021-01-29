@@ -10,25 +10,28 @@ const replySchema = new Schema({
     },
     replyList: [ // 回复列表
         {
+            // 评价的用户
             user: {
                 type: String
             },
+            // 评论id
             id: {
                 type: String,
             },
+            desc: {
+                type: String,
+                required: true
+            },
+            // 父节点id
             partantId: {
-                type: String
-            },
-            form: {
-                type: String
-            },
-            to: {
                 type: String
             },
             date: {
                 type: Date,
                 default: Date.now,
-            },
+            }
         }
     ]
-})
+});
+
+module.exports = Reply = mongoose.model('reply', replySchema);

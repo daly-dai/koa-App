@@ -3,12 +3,9 @@ const router = new Router(); // 路由对象
 const passport = require("koa-passport");
 
 
+
 // 引入模板实例
 const Publish = require("../../models/publish.js");
-
-// 引入模板实例
-const Reply = require("../../models/reply.js");
-
 
 const validatePublishInput = require("../../validation/publish.js");
 
@@ -169,16 +166,16 @@ router.post('/updatePublishStatus',
 );
 
 /**
- * @route GET api/publish/addPublishReply
- * @description 添加订单回复
+ * @route POST api/publish/deletePublish
+ * @description 删除订单数据
  * @access 私密的数据
  */
-router.post("/addPublishReply",
+router.post("/deletePublish",
     passport.authenticate("jwt", { session: false }),
     async (ctx) => {
-        const userId = ctx.state.user.id;
-        const id = ctx.body.id;
-    })
+
+    }
+)
 
 
 

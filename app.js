@@ -9,6 +9,8 @@ const routerResponse = require("./middleware/routerResponse.js");
 
 // 实例化koa
 const app = new koa();
+// socket 链接
+const io = require("socket.io")(server);
 
 app.use(bodyParser());
 
@@ -33,12 +35,19 @@ mongoose.set('useFindAndModify', false)
 // 统一的错误处理
 errorHandler(app);
 
-// 同意的返回数据封装
-
-app.use(routerResponse());
-
+// 统一封装返回数据格式
+app.use(routerResponse()); 
+// 对平台的token进行统一的校验
 app.use(passport.initialize());
 app.use(passport.session());
+
+
+io.on('connection', socket => {
+  const socketId = socket.id;
+
+  // 登录
+  socket.on('login')
+})
 
 // 回调到config文件中的passport.js
 require("./config/passport")(passport);

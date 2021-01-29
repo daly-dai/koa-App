@@ -127,7 +127,8 @@ router.post("/login", async (ctx) => {
   ctx.status = 200;
   const resData = {
     token: "Bearer " + token,
-    refToken: "Bearer " + refToken
+    refToken: "Bearer " + refToken,
+    ...payload
   }
 
   ctx.body = { success: true, mesg: "处理成功", code: '0000', data: resData };
