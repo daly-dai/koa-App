@@ -18,6 +18,10 @@ const UserSchema = new Schema({
   avatar: {
     type: String,
   },
+  scoketId: {
+    type: String,
+    required: true
+  },
   date: {
     type: Date,
     default: Date.now,

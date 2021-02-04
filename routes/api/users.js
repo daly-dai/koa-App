@@ -8,6 +8,7 @@ const passport = require("koa-passport");
 
 // 引入user
 const User = require("../../models/User");
+// const { v1: uuidv1 } = require('uuid');
 
 // 引入验证
 const validateRegisterInput = require("../../validation/registrer");
@@ -55,6 +56,7 @@ router.post("/register", async (ctx) => {
     email: ctx.request.body.email,
     avatar,
     password: ctx.request.body.password,
+    scoketId: '',
   });
 
   // 密码加密
@@ -120,6 +122,7 @@ router.post("/login", async (ctx) => {
     id: findResult[0].id,
     name: findResult[0].name,
     avatar: findResult[0].avatar,
+    scoketId: findResult[0].scoketId,
   };
   const token = jwt.sign(payload, keys.secretOrKey, { expiresIn: 3600 * 2 });
   const refToken = jwt.sign(payload, keys.secretOrKey, { expiresIn: 3600 * 6 });

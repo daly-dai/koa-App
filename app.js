@@ -1,4 +1,5 @@
 const koa = require("koa");
+const cors = require('koa2-cors');
 const mongoose = require("mongoose");
 const bodyParser = require("koa-bodyparser"); // 获取前端传输过来的数据
 const router = require("./routes/api/index.js");
@@ -6,16 +7,17 @@ const passport = require("koa-passport");
 const errorHandler = require("./middleware/errorHandler");
 const routerResponse = require("./middleware/routerResponse.js");
 
-const WebSocket = require('ws');
-const http = require('http');
-
-const WebSocketApi = require('./util/ws');//引入封装的ws模块
+const creatSocket = require('./socket');
 
 // 实例化koa
 const app = new koa();
 
+const server = require('http').createServer(app.callback());
+
 app.use(bodyParser());
 
+// 设置跨域
+app.use(cors());
 
 // config
 const dbURL = require("./config/keys").mongoURI;
@@ -29,14 +31,16 @@ mongoose
     console.log(err);
   });
 
-mongoose.set("useFindAndModify", false);
+mongoose.set('useFindAndModify', false)
+
 
 // 统一的错误处理
 errorHandler(app);
 
-// 统一封装返回数据格式
+// 同意的返回数据封装
+
 app.use(routerResponse());
-// 对平台的token进行统一的校验
+
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -48,10 +52,10 @@ app.use(router.routes()).use(router.allowedMethods());
 
 // 配置跨域
 app.use(async (ctx, next) => {
-  ctx.set("Access-Control-Allow-Origin", "*");
-  ctx.set("Access-Control-Allow-Headers", "authorization");
-  await next();
-});
+  ctx.set("Access-Control-Allow-Origin", "*")
+  ctx.set("Access-Control-Allow-Headers", "authorization")
+  await next()
+})
 
 const port = process.env.PORT || 5000;
 
@@ -60,10 +64,5 @@ app.listen(port, () => {
 });
 
 
-const server = http.createServer(app.callback())
-
-const wss = new WebSocket.Server({// 同一个端口监听不同的服务
-  server
-});
-
-WebSocketApi(wss)
+creatSocket(server);
+server.listen(5001);
