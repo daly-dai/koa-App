@@ -36,6 +36,10 @@ const ProfileSchema = new Schema({
   githubusername: {
     type: String,
   },
+  publish: {
+    type: String,
+    ref: "publish",
+  },
   experience: [
     {
       current: {

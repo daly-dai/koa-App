@@ -20,7 +20,6 @@ const UserSchema = new Schema({
   },
   scoketId: {
     type: String,
-    required: true
   },
   date: {
     type: Date,

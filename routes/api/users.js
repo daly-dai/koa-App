@@ -56,7 +56,7 @@ router.post("/register", async (ctx) => {
     email: ctx.request.body.email,
     avatar,
     password: ctx.request.body.password,
-    scoketId: '',
+    scoketId: "",
   });
 
   // 密码加密
@@ -131,10 +131,10 @@ router.post("/login", async (ctx) => {
   const resData = {
     token: "Bearer " + token,
     refToken: "Bearer " + refToken,
-    ...payload
-  }
+    ...payload,
+  };
 
-  ctx.body = { success: true, mesg: "处理成功", code: '0000', data: resData };
+  ctx.body = { success: true, mesg: "处理成功", code: "0000", data: resData };
 });
 
 /**
