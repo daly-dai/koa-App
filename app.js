@@ -18,12 +18,12 @@ const server = require("http").createServer(app.callback());
 
 app.use(bodyParser());
 
-// app.use(
-//   koaBody({
-//     multipart: true, // 支持文件上传
-//     encoding: "gzip",
-//   })
-// );
+app.use(
+  koaBody({
+    multipart: true, // 支持文件上传
+    encoding: "gzip",
+  })
+);
 
 // 设置跨域
 app.use(cors());

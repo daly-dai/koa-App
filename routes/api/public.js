@@ -15,41 +15,35 @@ router.get("/test", async (ctx) => {
   ctx.body = { msg: "public test" };
 });
 
-router.post(
-  "/upload",
+router.post("/upload", async (ctx) => {
+  const minioConfig = config.minioConfig;
+  const minioClient = new Minio.Client({ ...minioConfig });
+  const file = ctx.request.files.file;
 
-  async (ctx) => {
-    ctx.body = ctx.request.files;
-    const minioConfig = config.minioConfig;
+  let metaData = {
+    "Content-Type": "application/octet-stream",
+    "X-Amz-Meta-Testing": 1234,
+    example: 5678,
+  };
+  const staticPaath = "E:\\minio\\data\\second";
 
-    const minioClient = new Minio.Client({ ...minioConfig });
-    // console.log(ctx.request.files, 99999);
-    const file = ctx.request.files;
-
-    // Make a bucket called europetrip.
-    // minioClient.makeBucket("second", "us-east-1", function (err) {
-    //   if (err) return console.log(err, 7777);
-
-    //   console.log('Bucket created successfully in "us-east-1".');
-
-    var metaData = {
-      "Content-Type": "application/octet-stream",
-      "X-Amz-Meta-Testing": 1234,
-      example: 5678,
-    };
-    // Using fPutObject API upload your file to the bucket europetrip.
-    minioClient.fPutObject(
-      "second",
-      file.name,
-      file.path,
-      metaData,
-      function (err, etag) {
-        if (err) return console.log(err, 88888);
-        console.log("File uploaded successfully.");
+  // Using fPutObject API upload your file to the bucket europetrip.
+  minioClient.fPutObject(
+    "second",
+    file.name,
+    file.path,
+    metaData,
+    function (err, etag) {
+      if (err) {
+        ctx.throw(404, error);
       }
-    );
-  }
-);
-// });
+
+      console.log("File uploaded successfully.");
+    }
+  );
+
+  ctx.status = 200;
+  ctx.success({ path: staticPaath + file.name });
+});
 
 module.exports = router.routes();
