@@ -1,7 +1,7 @@
 const koa = require("koa");
 const cors = require("koa2-cors");
 const mongoose = require("mongoose");
-const bodyParser = require("koa-bodyparser"); // 获取前端传输过来的数据
+// const bodyParser = require("koa-bodyparser"); // 获取前端传输过来的数据
 const koaBody = require("koa-body");
 const path = require("path");
 const router = require("./routes/api/index.js");
@@ -16,12 +16,11 @@ const app = new koa();
 
 const server = require("http").createServer(app.callback());
 
-app.use(bodyParser());
+// app.use(bodyParser());
 
 app.use(
   koaBody({
     multipart: true, // 支持文件上传
-    encoding: "gzip",
   })
 );
 

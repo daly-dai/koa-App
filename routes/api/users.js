@@ -75,6 +75,7 @@ router.post("/register", async (ctx) => {
   await newUser
     .save()
     .then((user) => {
+      ctx.status = 200;
       ctx.body = user;
     })
     .catch((err) => {
