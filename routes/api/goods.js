@@ -38,6 +38,7 @@ router.post(
       attritionrate: data.attritionrate,
       goodsstatus: 0,
       merchandiseCategory: data.merchandiseCategory,
+      sellername: data.sellername,
     });
 
     await goodsItem.save().then((goods) => {
