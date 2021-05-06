@@ -6,7 +6,7 @@ const passport = require("koa-passport");
 const Goods = require("../../models/Goods.js");
 
 /**
- * @route GET api/profile/test
+ * @route GET api/goods/test
  * @description 测试接口地址
  * @access 公开的接口
  */
@@ -16,7 +16,7 @@ router.get("/test", async (ctx) => {
 });
 
 /**
- * @route GET api/profile/addGoods
+ * @route GET api/goods/addGoods
  * @description 测试接口地址
  * @access 私密的接口
  */
@@ -27,20 +27,20 @@ router.post(
     const data = ctx.request.body;
     const imgs = data.imgs.split(",");
 
-    const goodsItem = {
+    const goodsItem = new Goods({
       seller: ctx.state.user.id,
       buyer: "",
       goodsname: data.goodsname,
-      img: imgs,
+      imgs: imgs,
       price: data.price,
       avatar: data.avatar,
       desc: data.desc,
       attritionrate: data.attritionrate,
       goodsstatus: 0,
       merchandiseCategory: data.merchandiseCategory,
-    };
+    });
 
-    await new Goods(goodsItem).save().then((goods) => {
+    await goodsItem.save().then((goods) => {
       ctx.status = 200;
       ctx.success(goods);
     });
@@ -48,7 +48,31 @@ router.post(
 );
 
 /**
- * @route GET api/publish/getGoods
+ * @route GET api/goods/getGoodsByType
+ * @description 根据类别获取商品
+ * @access 私密的接口
+ */
+router.get(
+  "/getGoodsByType",
+  passport.authenticate("jwt", { session: false }),
+  async (ctx) => {
+    console.log(ctx.query, 8888);
+    const merchandiseCategory = ctx.query.merchandiseCategory;
+    let goodsList = [];
+
+    if (merchandiseCategory === "") {
+      goodsList = await Goods.find();
+    } else {
+      goodsList = await Goods.find({ merchandiseCategory });
+    }
+
+    ctx.status = 200;
+    ctx.success(goodsList);
+  }
+);
+
+/**
+ * @route GET api/goods/getGoods
  * @description 获取当前用户所有的订单
  * @access 私密的数据
  */
@@ -65,7 +89,7 @@ router.get(
 );
 
 /**
- * @route GET api/publish/getGoodsById
+ * @route GET api/goods/getGoodsById
  * @description 获取发布商品的详细信息
  * @access 私密的数据
  */
@@ -74,8 +98,10 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   async (ctx) => {
     const userId = ctx.state.user.id;
-    const id = ctx.request.body.id;
-    const goods = await Goods.findOne({ $or: [{ seller: userId }, { id }] });
+    const id = ctx.request.body.getGoodsById;
+    const goods = await Goods.findOne({
+      $or: [{ seller: userId }, { _id: id }],
+    });
 
     if (!goods.id) {
       ctx.status = 404;
@@ -88,16 +114,35 @@ router.get(
 );
 
 /**
- * @route GET api/publish/updateGoodsStatus
+ * @route GET api/goods/updateGoodsStatus
  * @description 更新订单状态信息(局部更新)
  * @access 私密的数据
  */
 router.post(
-  "/updateGoodsStatus",
+  "/confirmGoodsStatus",
   passport.authenticate("jwt", { session: false }),
   async (ctx) => {
     const userId = ctx.state.user.id;
-    const id = ctx.body.id;
+    const id = ctx.request.body.goodsId;
+    const status = ctx.request.body.status;
+
+    const goods = await Goods.findOneAndUpdate(
+      { _id: id },
+      {
+        $set: {
+          goodsstatus: status,
+          buyer: userId,
+        },
+      }
+    );
+
+    if (!goods.name) {
+      ctx.status = 404;
+      ctx.throw(404, "更新失败");
+    }
+
+    ctx.status = 200;
+    ctx.success(goods);
   }
 );
 

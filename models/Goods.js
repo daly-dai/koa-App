@@ -8,6 +8,11 @@ const goodsSchema = new Schema({
     ref: "users",
     require: true,
   },
+  // 买方名称
+  sellername: {
+    type: String,
+    require: true,
+  },
   // 买方
   buyer: {
     type: String,
@@ -16,7 +21,7 @@ const goodsSchema = new Schema({
     type: String,
     required: true,
   },
-  img: {
+  imgs: {
     type: Array,
   },
   price: {
@@ -49,9 +54,4 @@ const goodsSchema = new Schema({
   },
 });
 
-mongoose.model("Goods", goodsSchema);
-module.exports = {
-  getModel: function (name) {
-    return mongoose.model(name);
-  },
-};
+module.exports = Goods = mongoose.model("Goods", goodsSchema);

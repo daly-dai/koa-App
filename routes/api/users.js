@@ -125,7 +125,7 @@ router.post("/login", async (ctx) => {
     avatar: findResult[0].avatar,
     scoketId: findResult[0].scoketId,
   };
-  const token = jwt.sign(payload, keys.secretOrKey, { expiresIn: 3600 * 2 });
+  const token = jwt.sign(payload, keys.secretOrKey, { expiresIn: 3600 * 7 });
   const refToken = jwt.sign(payload, keys.secretOrKey, { expiresIn: 3600 * 6 });
 
   ctx.status = 200;

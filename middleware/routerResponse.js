@@ -1,31 +1,28 @@
 function routerResponse(option = {}) {
+  return async function (ctx, next) {
+    ctx.success = function (data) {
+      ctx.type = option.type || "json";
+      ctx.body = {
+        code: option.successCode || "0000",
+        msg: option.successMsg || "success",
+        data: data,
+      };
 
-    return async function (ctx, next) {
-        ctx.success = function (data) {
-            ctx.type = option.type || 'json'
-            ctx.body = {
-                code: option.successCode || 200,
-                msg: option.successMsg || 'success',
-                data: data
-            }
+      ctx.response.status = 200;
+    };
 
-            ctx.response.status = 200;
-        }
+    ctx.fail = function (msg, code) {
+      ctx.type = option.type || "json";
+      ctx.body = {
+        code: code || option.failCode || -1,
+        msg: msg || option.successMsg || "fail",
+      };
 
-        ctx.fail = function (msg, code) {
-            ctx.type = option.type || 'json'
-            ctx.body = {
-                code: code || option.failCode || -1,
-                msg: msg || option.successMsg || 'fail',
-            }
+      ctx.response.status = ctx.status;
+    };
 
-            ctx.response.status = ctx.status;
-        }
-
-        await next()
-    }
-
+    await next();
+  };
 }
 
-
-module.exports = routerResponse
+module.exports = routerResponse;

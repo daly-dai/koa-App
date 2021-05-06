@@ -25,7 +25,7 @@ router.post("/upload", async (ctx) => {
     "X-Amz-Meta-Testing": 1234,
     example: 5678,
   };
-  const staticPaath = "E:\\minio\\data\\second";
+  const staticPaath = "http://127.0.0.1:9000/second/";
 
   // Using fPutObject API upload your file to the bucket europetrip.
   minioClient.fPutObject(
