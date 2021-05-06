@@ -25,9 +25,11 @@ router.post("/upload", async (ctx) => {
     "X-Amz-Meta-Testing": 1234,
     example: 5678,
   };
-  const staticPaath = "http://127.0.0.1:9000/second/";
+  const staticPath = "http://127.0.0.1:9000/second/";
+  let success = false;
 
   // Using fPutObject API upload your file to the bucket europetrip.
+  const that = this;
   minioClient.fPutObject(
     "second",
     file.name,
@@ -35,15 +37,17 @@ router.post("/upload", async (ctx) => {
     metaData,
     function (err, etag) {
       if (err) {
-        ctx.throw(404, error);
+        ctx.throw(404, err);
+        return false;
       }
 
+      that.success = true;
       console.log("File uploaded successfully.");
     }
   );
 
   ctx.status = 200;
-  ctx.success({ path: staticPaath + file.name });
+  ctx.success({ path: staticPath + file.name });
 });
 
 module.exports = router.routes();

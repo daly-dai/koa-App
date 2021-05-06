@@ -57,7 +57,6 @@ router.get(
   "/getGoodsByType",
   passport.authenticate("jwt", { session: false }),
   async (ctx) => {
-    console.log(ctx.query, 8888);
     const merchandiseCategory = ctx.query.merchandiseCategory;
     let goodsList = [];
 
