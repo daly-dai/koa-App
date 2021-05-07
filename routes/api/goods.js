@@ -61,9 +61,11 @@ router.get(
     let goodsList = [];
 
     if (merchandiseCategory === "") {
-      goodsList = await Goods.find();
+      goodsList = await Goods.find({ goodsstatus: 0 });
     } else {
-      goodsList = await Goods.find({ merchandiseCategory });
+      goodsList = await Goods.find({
+        $or: [merchandiseCategory, { goodsstatus: 0 }],
+      });
     }
 
     ctx.status = 200;
@@ -98,10 +100,8 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   async (ctx) => {
     const userId = ctx.state.user.id;
-    const id = ctx.request.body.getGoodsById;
-    const goods = await Goods.findOne({
-      $or: [{ seller: userId }, { _id: id }],
-    });
+    const id = ctx.request.query.goodsId;
+    const goods = await Goods.findOne({ _id: id });
 
     if (!goods.id) {
       ctx.status = 404;
@@ -114,7 +114,7 @@ router.get(
 );
 
 /**
- * @route GET api/goods/updateGoodsStatus
+ * @route POST api/goods/updateGoodsStatus
  * @description 更新订单状态信息(局部更新)
  * @access 私密的数据
  */
@@ -126,23 +126,26 @@ router.post(
     const id = ctx.request.body.goodsId;
     const status = ctx.request.body.status;
 
-    const goods = await Goods.findOneAndUpdate(
-      { _id: id },
+    const goods = await Goods.findByIdAndUpdate(
+      id,
       {
         $set: {
           goodsstatus: status,
           buyer: userId,
         },
+      },
+      {
+        new: true,
       }
     );
 
-    if (!goods.name) {
+    if (!goods.goodsname) {
       ctx.status = 404;
       ctx.throw(404, "更新失败");
     }
 
     ctx.status = 200;
-    ctx.success(goods);
+    ctx.success("更新成功");
   }
 );
 
