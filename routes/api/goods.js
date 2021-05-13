@@ -149,4 +149,45 @@ router.post(
   }
 );
 
+/**
+ * @route GET api/goods/getGoodsByStatus
+ * @description 获取当前用户所有的订单
+ * @access 私密的数据
+ */
+router.get(
+  "/getGoodsByStatus",
+  passport.authenticate("jwt", { session: false }),
+  async (ctx) => {
+    const id = ctx.state.user.id;
+    const goodsstatus = ctx.request.query.goodsstatus;
+    const goodsList = await Goods.find({
+      $and: [{ seller: id }, { goodsstatus: goodsstatus }],
+    });
+
+    ctx.status = 200;
+    ctx.success(goodsList);
+  }
+);
+
+/**
+ * @route GET api/goods/deleteGoodsById
+ * @description 获取当前用户所有的订单
+ * @access 私密的数据
+ */
+router.post(
+  "/deleteGoodsById",
+  passport.authenticate("jwt", { session: false }),
+  async (ctx) => {
+    const goodsId = ctx.request.body.goodsId;
+    const goodsList = await Goods.deleteOne({ _id: goodsId });
+
+    if (goodsList) {
+      ctx.status = 200;
+      ctx.success("删除成功");
+    } else {
+      ctx.throw(404, "删除失败");
+    }
+  }
+);
+
 module.exports = router.routes();
