@@ -8,10 +8,18 @@ const goodsSchema = new Schema({
     ref: "users",
     require: true,
   },
-  // 买方名称
+  // 卖方名称
   sellername: {
     type: String,
     require: true,
+  },
+  // 买方名称
+  buyername: {
+    type: String,
+  },
+  // 买方的头像
+  buyeravatar: {
+    type: String,
   },
   // 买方
   buyer: {
@@ -38,6 +46,7 @@ const goodsSchema = new Schema({
     required: true,
   },
   // 商品状态
+  // '0出售' '1已拍下', '2待发货', '3待收货', '4已收货', '5待评价'
   goodsstatus: {
     type: Number,
     required: true,
