@@ -19,16 +19,12 @@ router.get("/test", async (ctx) => {
  * @description 获取所有正在使用中的社区
  * @access 私密的接口
  */
-router.get(
-  "/getCommunity",
-  passport.authenticate("jwt", { session: false }),
-  async (ctx) => {
-    const communityList = await Community.find({ status: 2 });
+router.get("/getCommunity", async (ctx) => {
+  const communityList = await Community.find({ status: 2 });
 
-    ctx.status = 200;
-    ctx.success(communityList);
-  }
-);
+  ctx.status = 200;
+  ctx.success(communityList);
+});
 
 /**
  * @route GET api/community/getAllCommunity
