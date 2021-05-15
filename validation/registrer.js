@@ -33,13 +33,13 @@ module.exports = function validateRegisterInput(data) {
     error.password = "密码的长度不能小于六位且不能超过十六位";
   }
 
-  if (validator.isEmpty(data.password2)) {
-    error.password2 = "密码不能为空";
-  }
+  // if (validator.isEmpty(data.password2)) {
+  //   error.password2 = "密码不能为空";
+  // }
 
-  if (!validator.equals(data.password, data.password2)) {
-    error.password2 = "两次输入的密码不匹配";
-  }
+  // if (!validator.equals(data.password, data.password2)) {
+  //   error.password2 = "两次输入的密码不匹配";
+  // }
 
   return {
     error,

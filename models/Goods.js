@@ -61,6 +61,11 @@ const goodsSchema = new Schema({
     type: Number,
     require: true,
   },
+  // 所属的社区
+  community: {
+    type: String,
+    required: true,
+  },
 });
 
 module.exports = Goods = mongoose.model("Goods", goodsSchema);

@@ -50,12 +50,13 @@ router.post("/register", async (ctx) => {
   }
 
   // 获取全球邮箱的头像
-  const avatar = gravatar.url(data.body.email, { s: "200", r: "pg", d: "mm" });
+  // const avatar = gravatar.url(data.body.email, { s: "200", r: "pg", d: "mm" });
   const newUser = new User({
     name: ctx.request.body.name,
     email: ctx.request.body.email,
-    avatar,
+    avatar: ctx.request.body.avatar,
     password: ctx.request.body.password,
+    community: ctx.request.body.community,
     scoketId: "",
   });
 
@@ -124,6 +125,8 @@ router.post("/login", async (ctx) => {
     name: findResult[0].name,
     avatar: findResult[0].avatar,
     scoketId: findResult[0].scoketId,
+    sex: findResult[0].sex || "",
+    community: findResult[0].community,
   };
   const token = jwt.sign(payload, keys.secretOrKey, { expiresIn: 3600 * 7 });
   const refToken = jwt.sign(payload, keys.secretOrKey, { expiresIn: 3600 * 6 });
@@ -153,6 +156,45 @@ router.get(
       email: ctx.state.user.email,
       avatar: ctx.state.user.avatar,
     };
+  }
+);
+
+/**
+ * @route GET api/users/editUserData
+ * @description 返回当前的用户信息
+ * @access 私密的
+ */
+router.post(
+  "/editUserData",
+  passport.authenticate("jwt", { session: false }),
+  async (ctx) => {
+    const id = ctx.state.user.id;
+    const data = ctx.request.body;
+
+    const userData = await User.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          avatar: data.avatar,
+          name: data.name,
+          community: data.community,
+          sex: data.sex,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+
+    if (!userData.name) {
+      ctx.status = 404;
+      ctx.throw(404, "更新失败");
+    }
+
+    delete userData.password;
+
+    ctx.status = 200;
+    ctx.success(userData);
   }
 );
 

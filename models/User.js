@@ -18,12 +18,20 @@ const UserSchema = new Schema({
   avatar: {
     type: String,
   },
+  sex: {
+    type: String,
+  },
   scoketId: {
     type: String,
   },
   date: {
     type: Date,
     default: Date.now,
+  },
+  // 所属的社区
+  community: {
+    type: String,
+    required: true,
   },
 });
 

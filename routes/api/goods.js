@@ -41,6 +41,7 @@ router.post(
       goodsstatus: 0,
       merchandiseCategory: data.merchandiseCategory,
       sellername: data.sellername,
+      community: data.community,
     });
 
     await goodsItem.save().then((goods) => {
@@ -306,6 +307,54 @@ router.post(
 
     ctx.status = 200;
     ctx.success("更新成功");
+  }
+);
+
+/**
+ * @route POST api/goods/updateGoodsMsg
+ * @description 更新订单信息
+ * @access 私密的数据
+ */
+router.post(
+  "/updateGoodsMsg",
+  passport.authenticate("jwt", { session: false }),
+  async (ctx) => {
+    const id = ctx.request.body.goodsId;
+    const data = ctx.request.body;
+
+    data.imgs = data.imgs.split(",");
+    const msg = {
+      goodsname: "",
+      imgs: "",
+      price: "",
+      desc: "",
+      attritionrate: "",
+      merchandiseCategory: "",
+    };
+
+    Object.keys(msg).map((key) => {
+      msg[key] = data[key];
+    });
+
+    const goods = await Goods.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          ...msg,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+
+    if (!goods) {
+      ctx.status = 404;
+      ctx.throw(404, "更新失败");
+    }
+
+    ctx.status = 200;
+    ctx.success(goods);
   }
 );
 
