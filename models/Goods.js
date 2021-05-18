@@ -66,6 +66,10 @@ const goodsSchema = new Schema({
     type: String,
     required: true,
   },
+  // 评价
+  evaluation: {
+    type: String,
+  },
 });
 
 module.exports = Goods = mongoose.model("Goods", goodsSchema);
