@@ -8,6 +8,7 @@ const passport = require("koa-passport");
 
 // 引入user
 const User = require("../../models/User");
+const Community = require("../../models/Community");
 // const { v1: uuidv1 } = require('uuid');
 
 // 引入验证
@@ -161,7 +162,7 @@ router.get(
 
 /**
  * @route GET api/users/editUserData
- * @description 返回当前的用户信息
+ * @description 编辑当前用户信息
  * @access 私密的
  */
 router.post(
@@ -195,6 +196,58 @@ router.post(
 
     ctx.status = 200;
     ctx.success(userData);
+  }
+);
+
+/**
+ * @route GET api/users/getUserList
+ * @description 获取用户列表
+ * @access 私密的
+ */
+router.get(
+  "/getUserList",
+  passport.authenticate("jwt", { session: false }),
+  async (ctx) => {
+    const list = {
+      pageSize: "",
+      pageNum: "",
+      total: "",
+      totalPage: "",
+      records: [],
+    };
+
+    list.pageNum = ctx.request.query.current;
+    list.pageSize = ctx.request.query.size || 5;
+
+    const userList = await User.find({});
+
+    list.totalRecord = userList.length;
+    list.totalPage = userList.length / list.pageSize;
+
+    list.records = await User.find({})
+      .populate("community")
+      .skip((list.pageNum - 1) * parseInt(list.pageSize))
+      .limit(parseInt(list.pageSize));
+
+    ctx.status = 200;
+    ctx.success(list);
+  }
+);
+
+/**
+ * @route GET api/users/deleteUserById
+ * @description 删除用户
+ * @access 私密的
+ */
+router.post(
+  "/deleteUserById",
+  passport.authenticate("jwt", { session: false }),
+  async (ctx) => {
+    const userId = ctx.request.body.userId;
+    await User.deleteOne({ _id: userId });
+
+    ctx.status = 200;
+    ctx.success("删除成功");
   }
 );
 

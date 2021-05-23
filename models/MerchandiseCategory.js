@@ -2,8 +2,13 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 // 实例化数据模板
-const communitySchema = new Schema({
+const merchandiseCategorySchema = new Schema({
   name: {
+    type: String,
+    required: true,
+  },
+  // 图标名称
+  iconName: {
     type: String,
     required: true,
   },
@@ -15,14 +20,15 @@ const communitySchema = new Schema({
   // 申请人
   apply: {
     type: String,
-    ref: "users",
     required: true,
   },
-
   // 通过
   through: {
     type: String,
   },
 });
 
-module.exports = community = mongoose.model("community", communitySchema);
+module.exports = merchandiseCategory = mongoose.model(
+  "merchandiseCategory",
+  merchandiseCategorySchema
+);
