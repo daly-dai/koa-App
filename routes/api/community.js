@@ -162,9 +162,6 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   async (ctx) => {
     const communityId = ctx.request.body.communityId;
-
-    console.log(communityId, 8888);
-
     const community = await Community.deleteOne({ _id: communityId });
 
     if (!community) {

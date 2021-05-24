@@ -57,6 +57,41 @@ router.post(
  * @access 私密的接口
  */
 router.get(
+  "/getAllGoodsByUser",
+  passport.authenticate("jwt", { session: false }),
+  async (ctx) => {
+    const id = ctx.query.id;
+    const list = {
+      pageSize: "",
+      pageNum: "",
+      total: "",
+      totalPage: "",
+      records: [],
+    };
+
+    list.pageNum = ctx.request.query.current;
+    list.pageSize = ctx.request.query.size || 5;
+
+    const goodsList = await Goods.find({ seller: id });
+
+    list.total = goodsList.length;
+    list.totalPage = goodsList.length / list.pageSize;
+
+    list.records = await Goods.find({ seller: id })
+      .skip((list.pageNum - 1) * parseInt(list.pageSize))
+      .limit(parseInt(list.pageSize));
+
+    ctx.status = 200;
+    ctx.success(list);
+  }
+);
+
+/**
+ * @route GET api/goods/getGoodsByType
+ * @description 根据类别获取商品
+ * @access 私密的接口
+ */
+router.get(
   "/getGoodsByType",
   passport.authenticate("jwt", { session: false }),
   async (ctx) => {

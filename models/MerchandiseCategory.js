@@ -8,18 +8,19 @@ const merchandiseCategorySchema = new Schema({
     required: true,
   },
   // 图标名称
-  iconName: {
+  iconname: {
     type: String,
-    required: true,
   },
   // 1、申请中 2、使用中 3、下架中
   status: {
     type: String,
+    ref: "users",
     required: true,
   },
   // 申请人
   apply: {
     type: String,
+    ref: "users",
     required: true,
   },
   // 通过
@@ -28,7 +29,7 @@ const merchandiseCategorySchema = new Schema({
   },
 });
 
-module.exports = merchandiseCategory = mongoose.model(
+module.exports = MerchandiseCategory = mongoose.model(
   "merchandiseCategory",
   merchandiseCategorySchema
 );

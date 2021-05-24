@@ -143,24 +143,6 @@ router.post("/login", async (ctx) => {
 });
 
 /**
- * @route GET api/users/currentUser
- * @description 返回当前的用户信息
- * @access 私密的
- */
-router.get(
-  "/currentUser",
-  passport.authenticate("jwt", { session: false }),
-  async (ctx) => {
-    ctx.body = {
-      id: ctx.state.user.id,
-      name: ctx.state.user.name,
-      email: ctx.state.user.email,
-      avatar: ctx.state.user.avatar,
-    };
-  }
-);
-
-/**
  * @route GET api/users/editUserData
  * @description 编辑当前用户信息
  * @access 私密的
@@ -221,7 +203,7 @@ router.get(
 
     const userList = await User.find({});
 
-    list.totalRecord = userList.length;
+    list.total = userList.length;
     list.totalPage = userList.length / list.pageSize;
 
     list.records = await User.find({})

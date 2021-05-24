@@ -9,7 +9,7 @@ const passport = require("koa-passport");
 const errorHandler = require("./middleware/errorHandler");
 const routerResponse = require("./middleware/routerResponse.js");
 
-const creatSocket = require("./socket");
+// const creatSocket = require("./socket");
 
 // 实例化koa
 const app = new koa();
@@ -70,5 +70,5 @@ app.listen(port, () => {
   console.log(`selever started on ${port}`);
 });
 
-creatSocket(server);
-server.listen(5001);
+// creatSocket(server);
+// server.listen(5001);

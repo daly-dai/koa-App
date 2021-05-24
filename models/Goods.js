@@ -58,7 +58,8 @@ const goodsSchema = new Schema({
   },
   // 商品类别
   merchandiseCategory: {
-    type: Number,
+    type: String,
+    ref: "merchandiseCategory",
     require: true,
   },
   // 所属的社区
