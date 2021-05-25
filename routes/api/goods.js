@@ -96,15 +96,21 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   async (ctx) => {
     const merchandiseCategory = ctx.query.merchandiseCategory;
-    let goodsList = [];
-
-    if (merchandiseCategory === "") {
-      goodsList = await Goods.find({ goodsstatus: 0 });
-    } else {
-      goodsList = await Goods.find({
-        $and: [merchandiseCategory, { goodsstatus: 0 }],
+    const community = ctx.query.community;
+    const query = [{ goodsstatus: 0 }];
+    if (merchandiseCategory) {
+      query.push({
+        merchandiseCategory,
       });
     }
+
+    if (community) {
+      query.push({ community });
+    }
+
+    const goodsList = await Goods.find({
+      $and: [...query],
+    });
 
     ctx.status = 200;
     ctx.success(goodsList);
