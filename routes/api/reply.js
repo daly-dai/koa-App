@@ -5,7 +5,7 @@ const passport = require("koa-passport");
 // 引入模板实例
 const Reply = require("../../models/reply.js");
 // 引入模板实例
-// const Goods = require("../../models/Goods.js");
+const Goods = require("../../models/Goods.js");
 
 const { v1: uuidv1 } = require("uuid");
 
@@ -94,7 +94,6 @@ router.post(
     const userId = ctx.state.user.id;
     const goods = ctx.request.body.goods;
     const desc = ctx.request.body.desc;
-
     const goodsList = await Reply.find({ goods: goods });
 
     if (goodsList.length > 0) {
@@ -143,12 +142,16 @@ router.get(
     const goodsList = await Reply.find({ goods: goods }).populate(
       "replylist.user"
     );
+    const goodsData = await Goods.find({ _id: goods });
 
     if (goodsList.length) {
       const replyList = goodsList[0].replylist || [];
       const list = [];
       replyList.map((item) => {
-        if (item.user._id.toString() === userId.toString()) {
+        if (
+          item.user._id.toString() === userId.toString() ||
+          goodsData[0].seller.toString() === userId.toString()
+        ) {
           list.push(item);
         }
       });
