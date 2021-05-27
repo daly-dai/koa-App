@@ -113,8 +113,6 @@ router.post(
       };
     }
 
-    console.log(merchandiseCategoryItem, 88888);
-
     const merchandiseCategoryData = new MerchandiseCategory({
       ...merchandiseCategoryItem,
     });
@@ -138,7 +136,6 @@ router.post(
     const MerchandiseCategoryId = ctx.request.body.id;
     const name = ctx.request.body.name;
     const iconname = ctx.request.body.iconName;
-    console.log(MerchandiseCategoryId, name, iconname, 88888);
 
     const merchandiseCategory = await MerchandiseCategory.findByIdAndUpdate(
       { _id: MerchandiseCategoryId },

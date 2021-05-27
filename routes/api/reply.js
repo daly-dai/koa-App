@@ -97,7 +97,6 @@ router.post(
 
     const goodsList = await Reply.find({ goods: goods });
 
-    console.log(goodsList);
     if (goodsList.length > 0) {
       await Reply.updateOne(
         { goods: goods },
