@@ -7,7 +7,7 @@ const replySchema = new Schema({
     ref: "goods",
     required: true,
   },
-  replyList: [
+  replylist: [
     // 回复列表
     {
       // 评价的用户
@@ -20,10 +20,6 @@ const replySchema = new Schema({
         type: String,
         required: true,
       },
-      // // 父节点id
-      // partantId: {
-      //   type: String,
-      // },
       date: {
         type: Date,
         default: Date.now,

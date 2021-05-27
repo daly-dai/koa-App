@@ -95,17 +95,21 @@ router.post(
     const goods = ctx.request.body.goods;
     const desc = ctx.request.body.desc;
 
-    const goodsList = Reply.find({ goods: goods });
+    const goodsList = await Reply.find({ goods: goods });
 
+    console.log(goodsList);
     if (goodsList.length > 0) {
       await Reply.updateOne(
         { goods: goods },
-        { $push: { user: userId, desc: desc } }
+        { $push: { replylist: { user: userId, desc: desc } } }
       );
+
+      ctx.status = 200;
+      ctx.success("新增成功");
     } else {
       const reply = new Reply({
         goods: goods,
-        replyList: [
+        replylist: [
           {
             user: userId,
             desc: desc,
@@ -138,11 +142,11 @@ router.get(
     const userId = ctx.state.user.id;
     const goods = ctx.request.query.goods;
     const goodsList = await Reply.find({ goods: goods }).populate(
-      "replyList.user"
+      "replylist.user"
     );
 
     if (goodsList.length) {
-      const replyList = goodsList[0].replyList;
+      const replyList = goodsList[0].replylist || [];
       const list = [];
       replyList.map((item) => {
         if (item.user._id.toString() === userId.toString()) {

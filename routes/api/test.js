@@ -8,7 +8,6 @@ const router = new Router(); // 路由对象
  */
 router.post("/madeTest", async (ctx) => {
   const data = ctx.request.body;
-  const date = new Date();
   console.log("请求接口", data);
   ctx.status = 200;
   ctx.body = { msg: "goods test" };
