@@ -32,6 +32,7 @@ router.get("/test", async (ctx) => {
  */
 router.post("/register", async (ctx) => {
   const data = ctx.request;
+  console.log(data);
   const { error, isValid } = validateRegisterInput(data.body);
 
   if (!isValid) {
@@ -50,15 +51,10 @@ router.post("/register", async (ctx) => {
     ctx.throw(500, "邮箱已被占用");
   }
 
-  // 获取全球邮箱的头像
-  // const avatar = gravatar.url(data.body.email, { s: "200", r: "pg", d: "mm" });
   const newUser = new User({
     name: ctx.request.body.name,
     email: ctx.request.body.email,
-    avatar: ctx.request.body.avatar,
     password: ctx.request.body.password,
-    community: ctx.request.body.community,
-    scoketId: "",
   });
 
   // 密码加密

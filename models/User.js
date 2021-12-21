@@ -8,32 +8,20 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
+  // 邮箱
   email: {
     type: String,
     required: true,
   },
+  // 密码
   password: {
     type: String,
     required: true,
   },
-  avatar: {
-    type: String,
-  },
-  sex: {
-    type: String,
-  },
-  scoketId: {
-    type: String,
-  },
+  // 时间
   date: {
     type: Date,
     default: Date.now,
-  },
-  // 所属的社区
-  community: {
-    type: String,
-    ref: "community",
-    required: true,
   },
   // 是否为管理员
   isAdmin: {

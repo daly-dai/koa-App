@@ -7,7 +7,7 @@ module.exports = function validateRegisterInput(data) {
   data.name = !isEmpty(data.name) ? data.name : "";
   data.email = !isEmpty(data.email) ? data.email : "";
   data.password = !isEmpty(data.password) ? data.password : "";
-  data.password2 = !isEmpty(data.password2) ? data.password2 : "";
+  // data.password2 = !isEmpty(data.password2) ? data.password2 : "";
 
   if (!validator.isLength(data.name, { min: 2, max: 16 })) {
     error.name = "名字的长度不能小于两位且不能超过十六位";
