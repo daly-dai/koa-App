@@ -89,7 +89,7 @@ router.post("/register", async (ctx) => {
 router.post("/login", async (ctx) => {
   const data = ctx.request.body;
   const { error, isValid } = validateLoginInput(data);
-
+  console.log(data, 67676767676);
   if (!isValid) {
     ctx.status = 404;
     ctx.body = error;
@@ -120,10 +120,7 @@ router.post("/login", async (ctx) => {
   const payload = {
     id: findResult[0].id,
     name: findResult[0].name,
-    avatar: findResult[0].avatar,
-    scoketId: findResult[0].scoketId,
-    sex: findResult[0].sex || "",
-    community: findResult[0].community,
+    email: findResult[0].email,
   };
   const token = jwt.sign(payload, keys.secretOrKey, { expiresIn: 3600 * 7 });
   const refToken = jwt.sign(payload, keys.secretOrKey, { expiresIn: 3600 * 6 });
