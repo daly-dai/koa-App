@@ -1,14 +1,12 @@
 const Router = require("koa-router"); // 路由
 const router = new Router(); // 路由对象
 const bcrypt = require("bcryptjs"); // 对密码进行加密
-const gravatar = require("gravatar"); // 获取全球邮箱的头像
 const keys = require("../../config/keys");
 const jwt = require("jsonwebtoken"); // 生成token
 const passport = require("koa-passport");
 
 // 引入user
 const User = require("../../models/User");
-const Community = require("../../models/Community");
 // const { v1: uuidv1 } = require('uuid');
 
 // 引入验证
