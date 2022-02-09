@@ -24,16 +24,30 @@ router.get(
     const data = [
       {
         id: "1",
+        name: "home",
+        title: "首页",
+        children: [],
+      },
+      {
+        id: "2",
+        name: "login",
+        title: "登录页",
+        children: [],
+      },
+      {
+        id: "3",
         name: "test",
+        title: "测试页面",
         children: [],
       },
     ];
+    console.log(data, 89898989);
 
     // 手动延迟两秒返回
-    setTimeout(() => {
-      ctx.status = 200;
-      ctx.success(data);
-    }, 2000);
+    // setTimeout(() => {
+    ctx.status = 200;
+    ctx.success(data);
+    // }, 200);
   }
 );
 

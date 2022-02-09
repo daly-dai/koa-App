@@ -3,7 +3,7 @@ function routerResponse(option = {}) {
     ctx.success = function (data) {
       ctx.type = option.type || "json";
       ctx.body = {
-        code: option.successCode || "0000",
+        code: option.successCode || "000000",
         msg: option.successMsg || "success",
         data: data,
       };
